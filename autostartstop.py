@@ -2,6 +2,7 @@
 import boto3
 from datetime import *
 import boto3.session
+import logging; logging.basicConfig(level=logging.INFO)
 
 def lambda_handler(event, context):
 	client = boto3.resource('ec2' , region_name='us-east-1')
@@ -9,12 +10,12 @@ def lambda_handler(event, context):
 	for instance in instances:
 		print instance
 		if instance.state["Name"] == 'stopped':
-			action = "Instance started"
-			print "Instance %s" % instance.id, "is stopped; starting it now"
+			logging.info("Instance started")
+			action = "Instance %s" % instance.id, "is stopped; starting it now"
 			instance.start()
 		else:
-			action = "Instance stopped"
-			print "Instance %s" % instance.id, "is running; stopping it gracefully"
+			logging.info("Instance stopped")
+			action = "Instance %s" % instance.id, "is running; stopping it gracefully"
 			instance.stop()
 	return action
 
